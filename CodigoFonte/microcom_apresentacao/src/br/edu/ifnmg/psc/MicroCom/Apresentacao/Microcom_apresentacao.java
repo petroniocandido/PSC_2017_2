@@ -6,7 +6,9 @@
 package br.edu.ifnmg.psc.MicroCom.Apresentacao;
 
 import br.edu.ifnmg.psc.MicroCom.Aplicacao.Cliente;
+import br.edu.ifnmg.psc.MicroCom.Aplicacao.ClienteRepositorio;
 import br.edu.ifnmg.psc.MicroCom.Aplicacao.ViolacaoRegraNegocioException;
+import br.edu.ifnmg.psc.MicroCom.Persistencia.ClienteDAO;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -21,16 +23,17 @@ public class Microcom_apresentacao {
      */
     public static void main(String[] args) {
         try {
-            Cliente c = new Cliente();
-            c.setNome("aju");
-            c.setCpf("200.160.200-78");
+            ClienteRepositorio clientes = new ClienteDAO();
+            
+            Cliente x = new Cliente();
+            x.setNome("Amanda");
+            x.setCpf("123.456.789-12");
+            
+            boolean Salvar = clientes.Salvar(x);
+            
         } catch (ViolacaoRegraNegocioException ex) {
-            System.out.println(ex.getMessage());
+            Logger.getLogger(Microcom_apresentacao.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        String cpf = "12345678901";
-        System.out.println(cpf.substring(0,3)+"."+cpf.substring(3,6)+"."+cpf.substring(6,9)+"-"+cpf.substring(9,11));
-        
     }
     
 }

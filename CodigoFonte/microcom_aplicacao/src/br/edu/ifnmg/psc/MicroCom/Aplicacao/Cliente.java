@@ -56,6 +56,10 @@ public class Cliente implements Entidade {
             throw new ViolacaoRegraNegocioException("O CPF deve estar no formato ###.###.###-##!");
         this.cpf = cpf.replace(".", "").replace("-", "");
     }
+    
+    public void setCpfSimples(String cpf){
+        this.cpf = cpf;
+    }
 
     public Date getNascimento() {
         return nascimento;
