@@ -7,6 +7,8 @@ package br.edu.ifnmg.psc.MicroCom.Aplicacao;
 
 import java.util.Date;
 import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  *
@@ -16,7 +18,9 @@ public class Cliente implements Entidade {
     private long id;
     private String nome, cpf;
     private Date nascimento;
+    private static Pattern regex_cpf = Pattern.compile("^\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}$");
 
+    
     public Cliente() {
     }
     
@@ -33,20 +37,24 @@ public class Cliente implements Entidade {
     }
 
     public String getNome() {
-        
         return nome;
     }
 
-    public void setNome(String nome) {
+    public void setNome(String nome) throws ViolacaoRegraNegocioException {
+        if(nome == null || nome.isEmpty() || nome.length() < 3 || nome.length() > 200)
+            throw new ViolacaoRegraNegocioException("O nome deve conter entre 3 e 200 caracteres!");
         this.nome = nome;
     }
 
     public String getCpf() {
-        return cpf;
+        return cpf.substring(0,3)+"."+cpf.substring(3,6)+"."+cpf.substring(6,9)+"-"+cpf.substring(9,11);
     }
 
-    public void setCpf(String cpf) {
-        this.cpf = cpf;
+    public void setCpf(String cpf) throws ViolacaoRegraNegocioException {
+        Matcher verificador = regex_cpf.matcher(cpf);
+        if(cpf == null || cpf.isEmpty() || ! verificador.matches())
+            throw new ViolacaoRegraNegocioException("O CPF deve estar no formato ###.###.###-##!");
+        this.cpf = cpf.replace(".", "").replace("-", "");
     }
 
     public Date getNascimento() {
