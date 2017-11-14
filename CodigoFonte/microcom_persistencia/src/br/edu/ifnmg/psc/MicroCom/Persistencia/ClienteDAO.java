@@ -41,7 +41,7 @@ public class ClienteDAO extends DAOGenerico<Cliente> implements ClienteRepositor
 
     @Override
     protected String consultaBuscar() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return "select id, nome, cpf, nascimento from Clientes "; 
     }
 
     @Override
@@ -58,6 +58,21 @@ public class ClienteDAO extends DAOGenerico<Cliente> implements ClienteRepositor
         } catch (SQLException ex) {
             Logger.getLogger(ClienteDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    protected String carregaParametrosBusca(Cliente obj){
+        String sql = "";
+        
+        if(obj.getId() > 0)
+            sql = this.filtrarPor(sql, "id", Long.toString( obj.getId() ));
+        
+        if(obj.getNome() != null && !obj.getNome().isEmpty())
+            sql = this.filtrarPor(sql, "nome", obj.getNome());
+        
+        if(obj.getCpf() != null && !obj.getCpf().isEmpty())
+            sql = this.filtrarPor(sql, "cpf", obj.getCpf().replace(".", "").replace("-", ""));        
+        
+        return sql;
     }
 
     @Override

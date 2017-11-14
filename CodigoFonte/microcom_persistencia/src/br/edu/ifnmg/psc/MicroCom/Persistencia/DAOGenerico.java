@@ -5,24 +5,23 @@
  */
 package br.edu.ifnmg.psc.MicroCom.Persistencia;
 
+import br.edu.ifnmg.psc.MicroCom.Aplicacao.Cliente;
 import br.edu.ifnmg.psc.MicroCom.Aplicacao.Entidade;
 import br.edu.ifnmg.psc.MicroCom.Aplicacao.Repositorio;
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.management.Query;
 
 /**
  *
  * @author petronio
  */
 public abstract class DAOGenerico<T extends Entidade> implements Repositorio<T> {
-    
-    protected Connection conexao;
+   
 
     protected abstract String consultaAbrir();
     protected abstract String consultaInsert();
@@ -31,6 +30,7 @@ public abstract class DAOGenerico<T extends Entidade> implements Repositorio<T> 
     protected abstract String consultaBuscar();
     
     protected abstract void carregaParametros(T obj, PreparedStatement consulta);
+    protected abstract String carregaParametrosBusca(T obj);
     protected abstract T carregaObjeto(ResultSet dados);
     
     @Override
@@ -124,10 +124,60 @@ public abstract class DAOGenerico<T extends Entidade> implements Repositorio<T> 
         
         return false;
     }
+    
+    protected String filtrarPor(String sql, String campo, String valor){
+        if(valor != null && valor.length() > 0){
+
+            if(sql.length() > 0)
+                sql = sql + " and ";
+            
+            sql = sql + campo + " = '" + valor + "'";
+        }
+        return sql;       
+        
+    }
 
     @Override
     public List<T> Buscar(T filtro) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        // Cria a lista que conterá o resultado da busca
+        List<T> resultado = new ArrayList<>();
+        
+        try {
+            
+            // Pega a consulta select da busca
+            String sql = this.consultaBuscar();
+            
+            
+            // Acrescenta os filtros where da busca
+            String where = "";
+            if(filtro != null)
+                where = this.carregaParametrosBusca(filtro);
+            
+            if(!where.isEmpty())
+                sql += " where " + where;
+            
+            // Utilizando a conexão aberta, cria um Statement (comando)
+            PreparedStatement consulta = BD.getConexao().prepareStatement(sql);    
+            
+            // Executa a consulta select e recebe os dados de retorno
+            ResultSet dados = consulta.executeQuery();
+            
+            // Enquanto houverem registros
+            while(dados.next()){
+                
+                // Converte os dados dos registros em objetos
+                T obj = this.carregaObjeto(dados);
+                
+                // Adiciona o objeto na lista de retorno
+                resultado.add(obj);
+            }
+            
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(DAOGenerico.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(DAOGenerico.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return resultado;
     }
-    
 }
