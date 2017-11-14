@@ -38,16 +38,32 @@ public abstract class DAOGenerico<T extends Entidade> implements Repositorio<T> 
         try {
             String sql = "";
             
-            if(obj.getId() == 0)
+            // Verifica se o objeto já foi salvo no BD
+            if(obj.getId() == 0) {
+                
+                //Se o id == 0 então pega a consulta de inserção
                 sql = this.consultaInsert();
-            else
+                
+            } else {
+                
+                //Se o id > 0 então pega a consulta de atualização
                 sql = this.consultaUpdate();
+            }
             
+            // Utilizando a conexão existente cria um Statement (comando)
             PreparedStatement consulta = BD.getConexao().prepareStatement(sql);
             
+            // Carrega os parâmetros da consulta
             this.carregaParametros(obj, consulta);
             
-            return consulta.executeUpdate() > 0;
+            // Executa a consulta
+            boolean resultado = consulta.executeUpdate() > 0;
+            
+            // Se a consulta obteve êxito e o objeto acabou de ser inserido
+            // if(resultado && obj.getId() == 0){
+                
+            //} else 
+            return resultado;
             
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(DAOGenerico.class.getName()).log(Level.SEVERE, null, ex);
@@ -59,12 +75,54 @@ public abstract class DAOGenerico<T extends Entidade> implements Repositorio<T> 
 
     @Override
     public T Abrir(long id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try {
+            // Pega a consulta para abrir (select)
+            String sql = this.consultaAbrir();
+            
+            // Utilizando a conexão aberta, cria um Statement (comando)
+            PreparedStatement consulta = BD.getConexao().prepareStatement(sql);
+            
+            // Coloca o parâmetro da consulta (id)
+            consulta.setLong(1, id);
+            
+            // Executa a consulta select e recebe os dados de retorno
+            ResultSet dados = consulta.executeQuery();
+            
+            // Se houverem registros
+            if(dados.next())
+                return this.carregaObjeto(dados); // Carrega o objeto com os dados retornados
+            
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(DAOGenerico.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(DAOGenerico.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return null;
     }
 
     @Override
     public boolean Apagar(T obj) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try {
+            // Pega a consulta para abrir (select)
+            String sql = this.consultaDelete();
+            
+            // Utilizando a conexão aberta, cria um Statement (comando)
+            PreparedStatement consulta = BD.getConexao().prepareStatement(sql);
+            
+            // Coloca o parâmetro da consulta (id)
+            consulta.setLong(1, obj.getId());
+            
+            // Executa a consulta
+            return consulta.executeUpdate() > 0;
+            
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(DAOGenerico.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(DAOGenerico.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return false;
     }
 
     @Override

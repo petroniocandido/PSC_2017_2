@@ -23,6 +23,13 @@ public class Cliente implements Entidade {
     
     public Cliente() {
     }
+
+    public Cliente(long id, String nome, String cpf, Date nascimento) {
+        this.id = id;
+        this.nome = nome;
+        this.cpf = cpf;
+        this.nascimento = nascimento;
+    }
     
     
 

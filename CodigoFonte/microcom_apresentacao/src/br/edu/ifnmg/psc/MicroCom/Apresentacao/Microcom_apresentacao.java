@@ -22,18 +22,23 @@ public class Microcom_apresentacao {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        /*
         try {
-            ClienteRepositorio clientes = new ClienteDAO();
-            
-            Cliente x = new Cliente();
-            x.setNome("Amanda");
-            x.setCpf("123.456.789-12");
-            
-            boolean Salvar = clientes.Salvar(x);
-            
+        ClienteRepositorio clientes = new ClienteDAO();
+        Cliente x = new Cliente();
+        x.setNome("Amanda");
+        x.setCpf("123.456.789-12");
+        boolean Salvar = clientes.Salvar(x);
         } catch (ViolacaoRegraNegocioException ex) {
-            Logger.getLogger(Microcom_apresentacao.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        Logger.getLogger(Microcom_apresentacao.class.getName()).log(Level.SEVERE, null, ex);
+        }*/
+        
+        ClienteRepositorio clientes = new ClienteDAO();
+        Cliente x = clientes.Abrir(1);
+        
+        System.out.println(x);
+        
+        clientes.Apagar(x);
     }
     
 }

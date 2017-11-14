@@ -21,7 +21,7 @@ public class ClienteDAO extends DAOGenerico<Cliente> implements ClienteRepositor
 
     @Override
     protected String consultaAbrir() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return "select id, nome, cpf, nascimento from Clientes where id = ?";
     }
 
     @Override
@@ -36,7 +36,7 @@ public class ClienteDAO extends DAOGenerico<Cliente> implements ClienteRepositor
 
     @Override
     protected String consultaDelete() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return "delete from Clientes where id = ?";
     }
 
     @Override
@@ -62,7 +62,17 @@ public class ClienteDAO extends DAOGenerico<Cliente> implements ClienteRepositor
 
     @Override
     protected Cliente carregaObjeto(ResultSet dados) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try {
+            Cliente obj = new Cliente(
+                    dados.getLong("id"), 
+                    dados.getString("nome"), 
+                    dados.getString("cpf"), 
+                    null );
+            return obj;
+        } catch (SQLException ex) {
+            Logger.getLogger(ClienteDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
     }
     
 }
