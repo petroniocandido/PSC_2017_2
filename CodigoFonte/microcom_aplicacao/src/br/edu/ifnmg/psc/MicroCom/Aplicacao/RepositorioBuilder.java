@@ -17,9 +17,8 @@ import java.util.logging.Logger;
  */
 public class RepositorioBuilder {
     
-    private static InputStream arquivo;
-    
-    private static Properties prop;
+    private static InputStream arquivo;  // Representa o arquivo físico no disco
+    private static Properties prop;      // Responsável por carregar as configurações dentro do arquivo
     
     
     static {
@@ -40,9 +39,13 @@ public class RepositorioBuilder {
     public static ClienteRepositorio getClienteRepositorio(){
         if(cliente == null){
             try {
+                
+                // Carrega a classe
                 Class obj = Class.forName(prop.getProperty("ClienteRepositorio"));
-                System.out.println(obj);
+                
+                // Cria uma nova instância da classe
                 cliente = (ClienteRepositorio)obj.newInstance();
+                
             } catch (ClassNotFoundException ex) {
                 Logger.getLogger(RepositorioBuilder.class.getName()).log(Level.SEVERE, null, ex);
             } catch (InstantiationException ex) {
