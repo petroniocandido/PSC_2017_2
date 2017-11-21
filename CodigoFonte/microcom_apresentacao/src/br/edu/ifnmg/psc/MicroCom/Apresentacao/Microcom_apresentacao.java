@@ -7,8 +7,10 @@ package br.edu.ifnmg.psc.MicroCom.Apresentacao;
 
 import br.edu.ifnmg.psc.MicroCom.Aplicacao.Cliente;
 import br.edu.ifnmg.psc.MicroCom.Aplicacao.ClienteRepositorio;
+import br.edu.ifnmg.psc.MicroCom.Aplicacao.ViolacaoRegraNegocioException;
 import br.edu.ifnmg.psc.MicroCom.Persistencia.ClienteDAO;
-import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -22,16 +24,16 @@ public class Microcom_apresentacao {
     public static void main(String[] args) {
         
         ClienteRepositorio clientes = new ClienteDAO();
-        /*
+        
         try {
-        ClienteRepositorio clientes = new ClienteDAO();
+        //ClienteRepositorio clientes = new ClienteDAO();
         Cliente x = new Cliente();
         x.setNome("Amanda");
         x.setCpf("123.456.789-12");
         boolean Salvar = clientes.Salvar(x);
         } catch (ViolacaoRegraNegocioException ex) {
         Logger.getLogger(Microcom_apresentacao.class.getName()).log(Level.SEVERE, null, ex);
-        }*/
+        }
         /*
         
         Cliente x = new Cliente(0, "XX", "11111111111", null);
@@ -46,6 +48,7 @@ public class Microcom_apresentacao {
         clientes.Salvar(k);
         */
         
+        /*
         Cliente filtro = new Cliente(0, "XX", null, null);
         
         List<Cliente> resultado = clientes.Buscar(filtro);
@@ -54,6 +57,7 @@ public class Microcom_apresentacao {
                 clientes.Apagar(c);
         
         //clientes.Apagar(x);
+*/
     }
     
 }

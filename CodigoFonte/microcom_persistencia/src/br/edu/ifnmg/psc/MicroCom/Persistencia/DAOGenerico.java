@@ -5,7 +5,6 @@
  */
 package br.edu.ifnmg.psc.MicroCom.Persistencia;
 
-import br.edu.ifnmg.psc.MicroCom.Aplicacao.Cliente;
 import br.edu.ifnmg.psc.MicroCom.Aplicacao.Entidade;
 import br.edu.ifnmg.psc.MicroCom.Aplicacao.Repositorio;
 import java.sql.PreparedStatement;
@@ -65,8 +64,6 @@ public abstract class DAOGenerico<T extends Entidade> implements Repositorio<T> 
             //} else 
             return resultado;
             
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(DAOGenerico.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {
             Logger.getLogger(DAOGenerico.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -92,8 +89,6 @@ public abstract class DAOGenerico<T extends Entidade> implements Repositorio<T> 
             if(dados.next())
                 return this.carregaObjeto(dados); // Carrega o objeto com os dados retornados
             
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(DAOGenerico.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {
             Logger.getLogger(DAOGenerico.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -116,8 +111,6 @@ public abstract class DAOGenerico<T extends Entidade> implements Repositorio<T> 
             // Executa a consulta
             return consulta.executeUpdate() > 0;
             
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(DAOGenerico.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {
             Logger.getLogger(DAOGenerico.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -172,8 +165,6 @@ public abstract class DAOGenerico<T extends Entidade> implements Repositorio<T> 
                 resultado.add(obj);
             }
             
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(DAOGenerico.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {
             Logger.getLogger(DAOGenerico.class.getName()).log(Level.SEVERE, null, ex);
         }

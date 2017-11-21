@@ -27,3 +27,6 @@ hs_err_pid*
 /CodigoFonte/microcom_aplicacao/build/
 /CodigoFonte/microcom_persistencia/nbproject/private/
 /CodigoFonte/microcom_persistencia/build/
+/CodigoFonte/microcom_aplicacao/dist/
+/CodigoFonte/microcom_apresentacao/dist/
+/CodigoFonte/microcom_persistencia/dist/
