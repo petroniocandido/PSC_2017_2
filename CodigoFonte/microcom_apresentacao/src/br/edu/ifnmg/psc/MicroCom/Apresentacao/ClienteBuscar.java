@@ -5,6 +5,18 @@
  */
 package br.edu.ifnmg.psc.MicroCom.Apresentacao;
 
+import br.edu.ifnmg.psc.MicroCom.Aplicacao.Cliente;
+import br.edu.ifnmg.psc.MicroCom.Aplicacao.ClienteRepositorio;
+import br.edu.ifnmg.psc.MicroCom.Aplicacao.RepositorioBuilder;
+import br.edu.ifnmg.psc.MicroCom.Aplicacao.ViolacaoRegraNegocioException;
+import java.util.List;
+import java.util.Vector;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+
 /**
  *
  * @author petronio
@@ -31,13 +43,13 @@ public class ClienteBuscar extends javax.swing.JInternalFrame {
         lblNome = new javax.swing.JLabel();
         txtNome = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
-        jFormattedTextField1 = new javax.swing.JFormattedTextField();
+        txtCpf = new javax.swing.JFormattedTextField();
         jLabel2 = new javax.swing.JLabel();
-        jFormattedTextField2 = new javax.swing.JFormattedTextField();
+        txtData = new javax.swing.JFormattedTextField();
         btnBuscar = new javax.swing.JButton();
         btnNovo = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tabResultado = new javax.swing.JTable();
 
         setMaximizable(true);
         setResizable(true);
@@ -47,13 +59,22 @@ public class ClienteBuscar extends javax.swing.JInternalFrame {
 
         jLabel1.setText("CPF");
 
-        jFormattedTextField1.setText("jFormattedTextField1");
+        try {
+            txtCpf.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("###.###.###-##")));
+        } catch (java.text.ParseException ex) {
+            ex.printStackTrace();
+        }
 
         jLabel2.setText("Dt. Nasc.");
 
-        jFormattedTextField2.setText("jFormattedTextField2");
+        txtData.setText("jFormattedTextField2");
 
         btnBuscar.setText("Buscar");
+        btnBuscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscarActionPerformed(evt);
+            }
+        });
 
         btnNovo.setText("Novo");
         btnNovo.addActionListener(new java.awt.event.ActionListener() {
@@ -62,18 +83,18 @@ public class ClienteBuscar extends javax.swing.JInternalFrame {
             }
         });
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tabResultado.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {},
+                {},
+                {},
+                {}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(tabResultado);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -98,12 +119,12 @@ public class ClienteBuscar extends javax.swing.JInternalFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(jLabel1)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jFormattedTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(txtCpf, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jLabel2)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jFormattedTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 0, Short.MAX_VALUE))
+                                .addComponent(txtData, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 9, Short.MAX_VALUE))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addContainerGap())
         );
@@ -115,9 +136,9 @@ public class ClienteBuscar extends javax.swing.JInternalFrame {
                     .addComponent(lblNome)
                     .addComponent(txtNome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1)
-                    .addComponent(jFormattedTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtCpf, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2)
-                    .addComponent(jFormattedTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtData, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(22, 22, 22)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnBuscar)
@@ -139,18 +160,53 @@ public class ClienteBuscar extends javax.swing.JInternalFrame {
         this.setVisible(false);
     }//GEN-LAST:event_btnNovoActionPerformed
 
+    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
+        try {
+            ClienteRepositorio clientes = RepositorioBuilder.getClienteRepositorio();
+            
+            Cliente filtro = new Cliente();
+            
+            if(!txtNome.getText().isEmpty())
+                filtro.setNome(txtNome.getText());
+            if(txtCpf.getValue() != null)
+                filtro.setCpf(txtCpf.getText());
+            
+            List<Cliente> resultado = clientes.Buscar(filtro);
+            
+            DefaultTableModel modelo = new DefaultTableModel();
+            
+            modelo.addColumn("ID");
+            modelo.addColumn("Nome");
+            modelo.addColumn("CPF");
+            
+            for(Cliente c : resultado){
+                Vector valores = new Vector();
+                valores.add(c.getId());
+                valores.add(c.getNome());
+                valores.add(c.getCpf());
+                
+                modelo.addRow(valores);
+            }
+            
+            tabResultado.setModel(modelo);
+            
+        } catch (ViolacaoRegraNegocioException ex) {
+            Logger.getLogger(ClienteBuscar.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnBuscarActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBuscar;
     private javax.swing.JButton btnNovo;
-    private javax.swing.JFormattedTextField jFormattedTextField1;
-    private javax.swing.JFormattedTextField jFormattedTextField2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JTable jTable1;
     private javax.swing.JLabel lblNome;
+    private javax.swing.JTable tabResultado;
+    private javax.swing.JFormattedTextField txtCpf;
+    private javax.swing.JFormattedTextField txtData;
     private javax.swing.JTextField txtNome;
     // End of variables declaration//GEN-END:variables
 }
