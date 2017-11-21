@@ -51,8 +51,7 @@ public class ClienteBuscar extends javax.swing.JInternalFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         tabResultado = new javax.swing.JTable();
 
-        setMaximizable(true);
-        setResizable(true);
+        setClosable(true);
         setTitle("Gerenciar Clientes");
 
         lblNome.setText("Nome:");
@@ -94,6 +93,11 @@ public class ClienteBuscar extends javax.swing.JInternalFrame {
 
             }
         ));
+        tabResultado.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tabResultadoMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tabResultado);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -194,6 +198,26 @@ public class ClienteBuscar extends javax.swing.JInternalFrame {
             Logger.getLogger(ClienteBuscar.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnBuscarActionPerformed
+
+    private void tabResultadoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabResultadoMouseClicked
+        int linha = tabResultado.getSelectedRow();
+        
+        long id = Long.parseLong(tabResultado.getValueAt(linha, 0).toString() );
+        
+        ClienteRepositorio clientes = RepositorioBuilder.getClienteRepositorio();
+        
+        Cliente obj = clientes.Abrir(id);
+        
+        ClienteEditar tela = new ClienteEditar();
+        this.getParent().add(tela);
+        tela.setVisible(true);
+        this.setVisible(false);
+        
+        tela.setEntidade(obj);
+        
+        tela.setTelaBusca(this);
+        
+    }//GEN-LAST:event_tabResultadoMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
