@@ -6,6 +6,12 @@
 package br.edu.ifnmg.psc.MicroCom.Apresentacao;
 
 import br.edu.ifnmg.psc.MicroCom.Aplicacao.Cliente;
+import br.edu.ifnmg.psc.MicroCom.Aplicacao.ClienteRepositorio;
+import br.edu.ifnmg.psc.MicroCom.Aplicacao.RepositorioBuilder;
+import br.edu.ifnmg.psc.MicroCom.Aplicacao.ViolacaoRegraNegocioException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -37,7 +43,10 @@ public class ClienteEditar extends javax.swing.JInternalFrame {
         this.telaBusca = telaBusca;
     }
     
-    
+    private void carregaObjeto() throws ViolacaoRegraNegocioException{
+        entidade.setNome( txtNome.getText() );
+        entidade.setCpf(txtCpf.getText());
+    }
 
     /**
      * Creates new form ClienteEditar
@@ -83,8 +92,18 @@ public class ClienteEditar extends javax.swing.JInternalFrame {
         jFormattedTextField2.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(new java.text.SimpleDateFormat("dd/MM/yyyy"))));
 
         btnSalvar.setText("Salvar");
+        btnSalvar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSalvarActionPerformed(evt);
+            }
+        });
 
         btnApagar.setText("Apagar");
+        btnApagar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnApagarActionPerformed(evt);
+            }
+        });
 
         btnCancelar.setText("Cancelar");
         btnCancelar.addActionListener(new java.awt.event.ActionListener() {
@@ -150,6 +169,50 @@ public class ClienteEditar extends javax.swing.JInternalFrame {
         this.getTelaBusca().setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_btnCancelarActionPerformed
+
+    private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
+        
+        if(JOptionPane.showConfirmDialog(this, "Deseja realmente salvar os dados?","Confirmação",
+                JOptionPane.YES_NO_OPTION) == 0) {
+            
+            try {
+                carregaObjeto();
+                
+                ClienteRepositorio clientes = RepositorioBuilder.getClienteRepositorio();
+                
+                if(clientes.Salvar(entidade))            
+                    JOptionPane.showMessageDialog(rootPane, "Dados salvos com sucesso!");
+                else
+                    JOptionPane.showMessageDialog(rootPane, "Falha ao salvar os dados! Informe o administrador do sistema.");
+            } catch (ViolacaoRegraNegocioException ex) {
+                
+                JOptionPane.showMessageDialog(rootPane, ex.getMessage());
+                
+            }
+        } 
+        
+    }//GEN-LAST:event_btnSalvarActionPerformed
+
+    private void btnApagarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnApagarActionPerformed
+        if(entidade.getId() == 0){
+            JOptionPane.showMessageDialog(rootPane, "Os dados ainda não estão salvos");
+            return;
+        }
+        
+        if(JOptionPane.showConfirmDialog(this, "Deseja realmente salvar os dados?","Confirmação",
+                JOptionPane.YES_NO_OPTION) == 0) {
+            
+            ClienteRepositorio clientes = RepositorioBuilder.getClienteRepositorio();
+
+            if(clientes.Apagar(entidade))  {          
+                JOptionPane.showMessageDialog(rootPane, "Dados removidos com sucesso!");
+                this.setVisible(false);
+                this.telaBusca.setVisible(true);
+            } else
+                JOptionPane.showMessageDialog(rootPane, "Falha ao apagar os dados! Informe o administrador do sistema.");
+
+        } 
+    }//GEN-LAST:event_btnApagarActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

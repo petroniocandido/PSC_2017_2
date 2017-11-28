@@ -159,6 +159,10 @@ public class ClienteBuscar extends javax.swing.JInternalFrame {
 
     private void btnNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNovoActionPerformed
         ClienteEditar tela = new ClienteEditar();
+        
+        tela.setEntidade(new Cliente());
+        tela.setTelaBusca(this);
+        
         this.getParent().add(tela);
         tela.setVisible(true);
         this.setVisible(false);
