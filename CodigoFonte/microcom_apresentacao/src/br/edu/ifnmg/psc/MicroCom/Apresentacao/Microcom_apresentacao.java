@@ -5,11 +5,11 @@
  */
 package br.edu.ifnmg.psc.MicroCom.Apresentacao;
 
-import br.edu.ifnmg.psc.MicroCom.Aplicacao.Cliente;
-import br.edu.ifnmg.psc.MicroCom.Aplicacao.ClienteRepositorio;
+import br.edu.ifnmg.psc.MicroCom.Aplicacao.Produto;
+import br.edu.ifnmg.psc.MicroCom.Aplicacao.ProdutoRepositorio;
 import br.edu.ifnmg.psc.MicroCom.Aplicacao.RepositorioBuilder;
 import br.edu.ifnmg.psc.MicroCom.Aplicacao.ViolacaoRegraNegocioException;
-import br.edu.ifnmg.psc.MicroCom.Persistencia.ClienteDAO;
+import java.math.BigDecimal;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -24,17 +24,19 @@ public class Microcom_apresentacao {
      */
     public static void main(String[] args) {
         
-        ClienteRepositorio clientes = RepositorioBuilder.getClienteRepositorio();
+        ProdutoRepositorio produtos = RepositorioBuilder.getProdutoRepositorio();
         
-        try {
+        //try {
         //ClienteRepositorio clientes = new ClienteDAO();
-        Cliente x = new Cliente();
-        x.setNome("Amanda");
-        x.setCpf("123.456.789-12");
-        boolean Salvar = clientes.Salvar(x);
-        } catch (ViolacaoRegraNegocioException ex) {
-        Logger.getLogger(Microcom_apresentacao.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        Produto x = new Produto();
+        x.setNome("Teste");
+        x.setDescricao("alguma bobagem desnecessária que Amanda sugeriu");
+        x.setPreco(BigDecimal.valueOf(22.3));
+        x.setEstoque(10);
+        boolean Salvar = produtos.Salvar(x);
+        //} catch (ViolacaoRegraNegocioException ex) {
+        //Logger.getLogger(Microcom_apresentacao.class.getName()).log(Level.SEVERE, null, ex);
+        //}
         /*
         
         Cliente x = new Cliente(0, "XX", "11111111111", null);

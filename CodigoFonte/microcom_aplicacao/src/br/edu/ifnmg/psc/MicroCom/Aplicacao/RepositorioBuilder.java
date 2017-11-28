@@ -57,4 +57,28 @@ public class RepositorioBuilder {
         return cliente;
     }
     
+    
+    private static ProdutoRepositorio produto;
+    
+    public static ProdutoRepositorio getProdutoRepositorio(){
+        if(produto == null){
+            try {
+                
+                // Carrega a classe
+                Class obj = Class.forName(prop.getProperty("ProdutoRepositorio"));
+                
+                // Cria uma nova instância da classe
+                produto = (ProdutoRepositorio)obj.newInstance();
+                
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(RepositorioBuilder.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (InstantiationException ex) {
+                Logger.getLogger(RepositorioBuilder.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IllegalAccessException ex) {
+                Logger.getLogger(RepositorioBuilder.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return produto;
+    }
+    
 }
