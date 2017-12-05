@@ -6,7 +6,6 @@
 package br.edu.ifnmg.psc.MicroCom.Apresentacao;
 
 import br.edu.ifnmg.psc.MicroCom.Aplicacao.Cliente;
-import br.edu.ifnmg.psc.MicroCom.Aplicacao.ClienteRepositorio;
 import br.edu.ifnmg.psc.MicroCom.Aplicacao.RepositorioBuilder;
 import br.edu.ifnmg.psc.MicroCom.Aplicacao.ViolacaoRegraNegocioException;
 import java.text.ParseException;
@@ -15,7 +14,6 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JOptionPane;
 
 /**
  *

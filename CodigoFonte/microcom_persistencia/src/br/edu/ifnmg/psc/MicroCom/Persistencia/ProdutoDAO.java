@@ -36,7 +36,7 @@ public class ProdutoDAO extends DAOGenerico<Produto> implements ProdutoRepositor
 
     @Override
     protected String consultaDelete() {
-        return "delete produtos where id = ?";
+        return "delete from produtos where id = ?";
     }
 
     @Override
@@ -59,7 +59,15 @@ public class ProdutoDAO extends DAOGenerico<Produto> implements ProdutoRepositor
 
     @Override
     protected String carregaParametrosBusca(Produto obj) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String sql = "";
+        
+        if(obj.getId() > 0)
+            sql = this.filtrarPor(sql, "id", Long.toString( obj.getId() ));
+        
+        if(obj.getNome() != null && !obj.getNome().isEmpty())
+            sql = this.filtrarPor(sql, "nome", obj.getNome());
+        
+        return sql;
     }
 
     @Override

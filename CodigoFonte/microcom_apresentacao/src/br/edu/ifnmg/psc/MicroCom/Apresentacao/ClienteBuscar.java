@@ -20,13 +20,15 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author petronio
  */
-public class ClienteBuscar extends javax.swing.JInternalFrame  {
+public class ClienteBuscar extends FormBuscar<Cliente>  {
 
     /**
      * Creates new form ClienteBuscar
      */
     public ClienteBuscar() {
         initComponents();
+        setEditar(new ClienteEditar());
+        setRepositorio(RepositorioBuilder.getClienteRepositorio());
     }
 
     /**
@@ -157,49 +159,47 @@ public class ClienteBuscar extends javax.swing.JInternalFrame  {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNovoActionPerformed
-        ClienteEditar tela = new ClienteEditar();
-        
-        tela.setEntidade(new Cliente());
-        tela.setTelaBusca(this);
-        
-        this.getParent().add(tela);
-        tela.setVisible(true);
-        this.setVisible(false);
+        novo();
     }//GEN-LAST:event_btnNovoActionPerformed
 
-    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
-        try {
-            ClienteRepositorio clientes = RepositorioBuilder.getClienteRepositorio();
+    protected void preencherTabela(List<Cliente> resultado){
+        DefaultTableModel modelo = new DefaultTableModel();
             
+        modelo.addColumn("ID");
+        modelo.addColumn("Nome");
+        modelo.addColumn("CPF");
+
+        for(Cliente c : resultado){
+            Vector valores = new Vector();
+            valores.add(c.getId());
+            valores.add(c.getNome());
+            valores.add(c.getCpf());
+
+            modelo.addRow(valores);
+        }
+
+        tabResultado.setModel(modelo);
+    }
+    protected Cliente carregaFiltro(){
+        try {
             Cliente filtro = new Cliente();
             
             if(!txtNome.getText().isEmpty())
                 filtro.setNome(txtNome.getText());
             if(txtCpf.getValue() != null)
                 filtro.setCpf(txtCpf.getText());
-            
-            List<Cliente> resultado = clientes.Buscar(filtro);
-            
-            DefaultTableModel modelo = new DefaultTableModel();
-            
-            modelo.addColumn("ID");
-            modelo.addColumn("Nome");
-            modelo.addColumn("CPF");
-            
-            for(Cliente c : resultado){
-                Vector valores = new Vector();
-                valores.add(c.getId());
-                valores.add(c.getNome());
-                valores.add(c.getCpf());
-                
-                modelo.addRow(valores);
-            }
-            
-            tabResultado.setModel(modelo);
-            
+            return filtro;
         } catch (ViolacaoRegraNegocioException ex) {
             Logger.getLogger(ClienteBuscar.class.getName()).log(Level.SEVERE, null, ex);
         }
+        return null;
+    }
+    protected Cliente novaEntidade(){
+        return new Cliente();
+    }
+    
+    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
+        buscar();
     }//GEN-LAST:event_btnBuscarActionPerformed
 
     private void tabResultadoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabResultadoMouseClicked
@@ -207,19 +207,7 @@ public class ClienteBuscar extends javax.swing.JInternalFrame  {
         
         long id = Long.parseLong(tabResultado.getValueAt(linha, 0).toString() );
         
-        ClienteRepositorio clientes = RepositorioBuilder.getClienteRepositorio();
-        
-        Cliente obj = clientes.Abrir(id);
-        
-        ClienteEditar tela = new ClienteEditar();
-        this.getParent().add(tela);
-        tela.setVisible(true);
-        this.setVisible(false);
-        
-        tela.setEntidade(obj);
-        
-        tela.setTelaBusca(this);
-        
+        editar(id);
     }//GEN-LAST:event_tabResultadoMouseClicked
 
 

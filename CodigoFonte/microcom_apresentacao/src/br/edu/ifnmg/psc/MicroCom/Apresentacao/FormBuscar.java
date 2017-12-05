@@ -6,15 +6,18 @@
 package br.edu.ifnmg.psc.MicroCom.Apresentacao;
 
 import br.edu.ifnmg.psc.MicroCom.Aplicacao.Entidade;
+import br.edu.ifnmg.psc.MicroCom.Aplicacao.Repositorio;
+import java.util.List;
 
 /**
  *
  * @author petronio
  */
-public class FormBuscar<T extends Entidade> extends javax.swing.JInternalFrame {
+public abstract class FormBuscar<T extends Entidade> extends javax.swing.JInternalFrame {
     
     private T filtro;
     private FormEditar editar;
+    private Repositorio<T> repositorio;
 
     public T getFiltro() {
         return filtro;
@@ -32,5 +35,46 @@ public class FormBuscar<T extends Entidade> extends javax.swing.JInternalFrame {
         this.editar = editar;
     }
     
+    public Repositorio<T> getRepositorio() {
+        return repositorio;
+    }
+
+    public void setRepositorio(Repositorio<T> repositorio) {
+        this.repositorio = repositorio;
+    }
+    
+    protected abstract void preencherTabela(List<T> dados);
+    protected abstract T carregaFiltro();
+    protected abstract T novaEntidade();
+    
+    protected void novo() {
+        editar.setEntidade(novaEntidade());
+        editar.setBuscar(this);
+        
+        this.getParent().add(editar);
+        editar.setVisible(true);
+        this.setVisible(false);
+    }
+    
+    protected void buscar() {
+        filtro = carregaFiltro();
+
+        List<T> resultado = getRepositorio().Buscar(filtro);
+
+        preencherTabela(resultado);
+            
+    }
+    
+    protected void editar(long id) {
+        T obj = getRepositorio().Abrir(id);
+        
+        this.getParent().add(editar);
+        editar.setVisible(true);
+        this.setVisible(false);
+        
+        editar.setEntidade(obj);
+        
+        editar.setBuscar(this);
+    }
     
 }

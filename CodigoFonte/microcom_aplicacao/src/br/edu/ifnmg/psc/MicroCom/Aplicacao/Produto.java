@@ -21,6 +21,7 @@ public class Produto implements Entidade {
 
     public Produto() {
         this.id = 0;
+        this.preco = new BigDecimal("0.00");
         this.estoque = 0;
     }
     
