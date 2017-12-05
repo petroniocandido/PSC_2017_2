@@ -15,13 +15,12 @@ import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
 
 /**
  *
  * @author petronio
  */
-public class ClienteBuscar extends javax.swing.JInternalFrame {
+public class ClienteBuscar extends javax.swing.JInternalFrame  {
 
     /**
      * Creates new form ClienteBuscar

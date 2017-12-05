@@ -21,37 +21,13 @@ import javax.swing.JOptionPane;
  *
  * @author petronio
  */
-public class ClienteEditar extends javax.swing.JInternalFrame {
+public class ClienteEditar extends FormEditar<Cliente> {
     
-    Cliente entidade;
-    
-    ClienteBuscar telaBusca;
     
     Calendar calendario = GregorianCalendar.getInstance();
     SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 
-    public Cliente getEntidade() {
-        return entidade;
-    }
-
-    public void setEntidade(Cliente entidade) {
-        this.entidade = entidade;
-        
-        txtNome.setText(entidade.getNome());
-        txtCpf.setText(entidade.getCpf());
-        txtData.setText( df.format(entidade.getNascimento()) );
-        
-    }
-
-    public ClienteBuscar getTelaBusca() {
-        return telaBusca;
-    }
-
-    public void setTelaBusca(ClienteBuscar telaBusca) {
-        this.telaBusca = telaBusca;
-    }
-    
-    private void carregaObjeto() throws ViolacaoRegraNegocioException{
+    protected void carregaObjeto() throws ViolacaoRegraNegocioException{
         try {
             entidade.setNome( txtNome.getText() );
             entidade.setCpf(txtCpf.getText());
@@ -60,13 +36,19 @@ public class ClienteEditar extends javax.swing.JInternalFrame {
             Logger.getLogger(ClienteEditar.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    protected void carregaCampos(){
+        txtNome.setText(entidade.getNome());
+        txtCpf.setText(entidade.getCpf());
+        txtData.setText( df.format(entidade.getNascimento()) );
+    }
 
     /**
      * Creates new form ClienteEditar
      */
     public ClienteEditar() {
         initComponents();
-        
+        setRepositorio(RepositorioBuilder.getClienteRepositorio());
     }
 
     /**
@@ -180,52 +162,15 @@ public class ClienteEditar extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
-        this.getTelaBusca().setVisible(true);
-        this.setVisible(false);
+        cancelar();
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
-        
-        if(JOptionPane.showConfirmDialog(this, "Deseja realmente salvar os dados?","Confirmação",
-                JOptionPane.YES_NO_OPTION) == 0) {
-            
-            try {
-                carregaObjeto();
-                
-                ClienteRepositorio clientes = RepositorioBuilder.getClienteRepositorio();
-                
-                if(clientes.Salvar(entidade))            
-                    JOptionPane.showMessageDialog(rootPane, "Dados salvos com sucesso!");
-                else
-                    JOptionPane.showMessageDialog(rootPane, "Falha ao salvar os dados! Informe o administrador do sistema.");
-            } catch (ViolacaoRegraNegocioException ex) {
-                
-                JOptionPane.showMessageDialog(rootPane, ex.getMessage());
-                
-            }
-        } 
-        
+        salvar();
     }//GEN-LAST:event_btnSalvarActionPerformed
 
     private void btnApagarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnApagarActionPerformed
-        if(entidade.getId() == 0){
-            JOptionPane.showMessageDialog(rootPane, "Os dados ainda não estão salvos");
-            return;
-        }
-        
-        if(JOptionPane.showConfirmDialog(this, "Deseja realmente salvar os dados?","Confirmação",
-                JOptionPane.YES_NO_OPTION) == 0) {
-            
-            ClienteRepositorio clientes = RepositorioBuilder.getClienteRepositorio();
-
-            if(clientes.Apagar(entidade))  {          
-                JOptionPane.showMessageDialog(rootPane, "Dados removidos com sucesso!");
-                this.setVisible(false);
-                this.telaBusca.setVisible(true);
-            } else
-                JOptionPane.showMessageDialog(rootPane, "Falha ao apagar os dados! Informe o administrador do sistema.");
-
-        } 
+        apagar(); 
     }//GEN-LAST:event_btnApagarActionPerformed
 
 
