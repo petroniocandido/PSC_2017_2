@@ -9,6 +9,10 @@ import br.edu.ifnmg.psc.MicroCom.Aplicacao.Cliente;
 import br.edu.ifnmg.psc.MicroCom.Aplicacao.ClienteRepositorio;
 import br.edu.ifnmg.psc.MicroCom.Aplicacao.RepositorioBuilder;
 import br.edu.ifnmg.psc.MicroCom.Aplicacao.ViolacaoRegraNegocioException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -22,6 +26,9 @@ public class ClienteEditar extends javax.swing.JInternalFrame {
     Cliente entidade;
     
     ClienteBuscar telaBusca;
+    
+    Calendar calendario = GregorianCalendar.getInstance();
+    SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 
     public Cliente getEntidade() {
         return entidade;
@@ -32,6 +39,7 @@ public class ClienteEditar extends javax.swing.JInternalFrame {
         
         txtNome.setText(entidade.getNome());
         txtCpf.setText(entidade.getCpf());
+        txtData.setText( df.format(entidade.getNascimento()) );
         
     }
 
@@ -44,8 +52,13 @@ public class ClienteEditar extends javax.swing.JInternalFrame {
     }
     
     private void carregaObjeto() throws ViolacaoRegraNegocioException{
-        entidade.setNome( txtNome.getText() );
-        entidade.setCpf(txtCpf.getText());
+        try {
+            entidade.setNome( txtNome.getText() );
+            entidade.setCpf(txtCpf.getText());
+            entidade.setNascimento( df.parse( txtData.getText() ) );
+        } catch (ParseException ex) {
+            Logger.getLogger(ClienteEditar.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -53,6 +66,7 @@ public class ClienteEditar extends javax.swing.JInternalFrame {
      */
     public ClienteEditar() {
         initComponents();
+        
     }
 
     /**
@@ -69,7 +83,7 @@ public class ClienteEditar extends javax.swing.JInternalFrame {
         jLabel2 = new javax.swing.JLabel();
         txtCpf = new javax.swing.JFormattedTextField();
         jLabel3 = new javax.swing.JLabel();
-        jFormattedTextField2 = new javax.swing.JFormattedTextField();
+        txtData = new javax.swing.JFormattedTextField();
         btnSalvar = new javax.swing.JButton();
         btnApagar = new javax.swing.JButton();
         btnCancelar = new javax.swing.JButton();
@@ -89,7 +103,7 @@ public class ClienteEditar extends javax.swing.JInternalFrame {
 
         jLabel3.setText("Data Nasc.");
 
-        jFormattedTextField2.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(new java.text.SimpleDateFormat("dd/MM/yyyy"))));
+        txtData.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(new java.text.SimpleDateFormat("dd/MM/yyyy"))));
 
         btnSalvar.setText("Salvar");
         btnSalvar.addActionListener(new java.awt.event.ActionListener() {
@@ -131,7 +145,7 @@ public class ClienteEditar extends javax.swing.JInternalFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jLabel3)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jFormattedTextField2)))
+                                .addComponent(txtData)))
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(btnSalvar)
@@ -153,7 +167,7 @@ public class ClienteEditar extends javax.swing.JInternalFrame {
                     .addComponent(jLabel2)
                     .addComponent(txtCpf, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3)
-                    .addComponent(jFormattedTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtData, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(33, 33, 33)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnSalvar)
@@ -219,11 +233,11 @@ public class ClienteEditar extends javax.swing.JInternalFrame {
     private javax.swing.JButton btnApagar;
     private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnSalvar;
-    private javax.swing.JFormattedTextField jFormattedTextField2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JFormattedTextField txtCpf;
+    private javax.swing.JFormattedTextField txtData;
     private javax.swing.JTextField txtNome;
     // End of variables declaration//GEN-END:variables
 }

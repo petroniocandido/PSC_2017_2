@@ -7,6 +7,7 @@ package br.edu.ifnmg.psc.MicroCom.Persistencia;
 
 import br.edu.ifnmg.psc.MicroCom.Aplicacao.Cliente;
 import br.edu.ifnmg.psc.MicroCom.Aplicacao.ClienteRepositorio;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -50,7 +51,7 @@ public class ClienteDAO extends DAOGenerico<Cliente> implements ClienteRepositor
             
             consulta.setString(1, obj.getNome());
             consulta.setString(2, obj.getCpf().replace(".", "").replace("-", ""));
-            consulta.setDate(3, null);
+            consulta.setDate(3, new Date(obj.getNascimento().getTime()));
             
             if(obj.getId() > 0)
                 consulta.setLong(4, obj.getId());
@@ -60,6 +61,7 @@ public class ClienteDAO extends DAOGenerico<Cliente> implements ClienteRepositor
         }
     }
     
+    @Override
     protected String carregaParametrosBusca(Cliente obj){
         String sql = "";
         
@@ -79,10 +81,10 @@ public class ClienteDAO extends DAOGenerico<Cliente> implements ClienteRepositor
     protected Cliente carregaObjeto(ResultSet dados) {
         try {
             Cliente obj = new Cliente(
-                    dados.getLong("id"), 
-                    dados.getString("nome"), 
-                    dados.getString("cpf"), 
-                    null );
+                dados.getLong("id"), 
+                dados.getString("nome"), 
+                dados.getString("cpf"), 
+                dados.getDate("nascimento") );
             return obj;
         } catch (SQLException ex) {
             Logger.getLogger(ClienteDAO.class.getName()).log(Level.SEVERE, null, ex);
