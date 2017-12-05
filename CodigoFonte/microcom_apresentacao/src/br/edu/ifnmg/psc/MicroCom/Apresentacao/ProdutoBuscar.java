@@ -45,6 +45,10 @@ public class ProdutoBuscar extends FormBuscar<Produto> {
         btnBuscar = new javax.swing.JButton();
         btnNovo = new javax.swing.JButton();
 
+        setClosable(true);
+        setTitle("Gerenciar Produtos");
+        setToolTipText("");
+
         tabResultado.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {},

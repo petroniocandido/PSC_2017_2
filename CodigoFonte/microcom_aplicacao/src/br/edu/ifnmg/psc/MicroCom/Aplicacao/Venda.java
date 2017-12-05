@@ -24,7 +24,10 @@ public class Venda implements Entidade {
     private List<VendaItem> itens;
 
     public Venda() {
+        id = 0;
         itens = new ArrayList<>();
+        data = new Date();
+        valorTotal = new BigDecimal("0.00");
     }
 
     @Override

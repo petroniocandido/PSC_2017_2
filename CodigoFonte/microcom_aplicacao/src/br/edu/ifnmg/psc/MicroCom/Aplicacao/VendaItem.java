@@ -54,6 +54,8 @@ public class VendaItem implements Entidade {
 
     public void setProduto(Produto produto) {
         this.produto = produto;
+        if(id == 0 && valorUnitario == null)
+            valorUnitario = produto.getPreco();
     }
 
     public int getQuantidade() {

@@ -81,4 +81,27 @@ public class RepositorioBuilder {
         return produto;
     }
     
+    private static VendaRepositorio venda;
+    
+    public static VendaRepositorio getVendaRepositorio(){
+        if(venda == null){
+            try {
+                
+                // Carrega a classe
+                Class obj = Class.forName(prop.getProperty("VendaRepositorio"));
+                
+                // Cria uma nova instância da classe
+                venda = (VendaRepositorio)obj.newInstance();
+                
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(RepositorioBuilder.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (InstantiationException ex) {
+                Logger.getLogger(RepositorioBuilder.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IllegalAccessException ex) {
+                Logger.getLogger(RepositorioBuilder.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return venda;
+    }
+    
 }
